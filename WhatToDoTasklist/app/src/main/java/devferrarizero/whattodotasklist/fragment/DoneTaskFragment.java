@@ -12,10 +12,7 @@ import android.view.ViewGroup;
 import devferrarizero.whattodotasklist.R;
 
 
-public class DoneTaskFragment extends Fragment {
-
-    private RecyclerView rvDoneTasks;
-    private RecyclerView.LayoutManager layoutManager;
+public class DoneTaskFragment extends TaskFragment {
 
     public DoneTaskFragment() {
         
@@ -27,12 +24,11 @@ public class DoneTaskFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_done_task, container, false);
 
-        rvDoneTasks = (RecyclerView)rootView.findViewById(R.id.rvDoneTasks);
+        recyclerView = (RecyclerView)rootView.findViewById(R.id.rvDoneTasks);
 
         layoutManager = new LinearLayoutManager(getActivity());
-        rvDoneTasks.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);
         
         return rootView;
     }
-
 }

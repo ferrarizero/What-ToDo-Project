@@ -1,5 +1,8 @@
 package devferrarizero.whattodotasklist.adapter;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
+import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,30 +12,21 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import devferrarizero.whattodotasklist.R;
 import devferrarizero.whattodotasklist.Utils;
+import devferrarizero.whattodotasklist.fragment.CurrentTaskFragment;
+import devferrarizero.whattodotasklist.fragment.TaskFragment;
 import devferrarizero.whattodotasklist.model.Item;
 import devferrarizero.whattodotasklist.model.ModelTask;
 
-public class CurrentTasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-
-    List<Item> items = new ArrayList<>();
+public class CurrentTasksAdapter extends TaskAdapter {
 
     public static final int TYPE_TASK = 0;
     public static final int TYPE_SEPARATOR = 1;
 
-    public Item getItem(int position) {
-        return items.get(position);
-    }
-
-    public void addItem(Item item) {
-        items.add(item);
-        notifyItemInserted(getItemCount() - 1);
-    }
-
-    public void addItem(int location, Item item) {
-        items.add(location, item);
-        notifyItemInserted(location);
+    public CurrentTasksAdapter(CurrentTaskFragment taskFragment) {
+        super(taskFragment);
     }
 
     @Override
@@ -42,7 +36,8 @@ public class CurrentTasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.model_task, viewGroup, false);
                 TextView title = (TextView) v.findViewById(R.id.tvTaskTitle);
                 TextView date = (TextView) v.findViewById(R.id.tvTaskDate);
-                return new TaskViewHolder(v, title, date);
+                CircleImageView priority = (CircleImageView) v.findViewById(R.id.cvTaskPriority);
+                return new TaskViewHolder(v, title, date, priority);
             default:
                 return null;
         }
@@ -54,19 +49,61 @@ public class CurrentTasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         if (item.isTask()) {
             viewHolder.itemView.setEnabled(true);
-            ModelTask task = (ModelTask) item;
-            TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
+            final ModelTask task = (ModelTask) item;
+            final TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
+
+            final View itemView = taskViewHolder.itemView;
+            final Resources resources = itemView.getResources();
 
             taskViewHolder.title.setText(task.getTitle());
             if (task.getDate() != 0) {
                 taskViewHolder.date.setText(Utils.getFullDate(task.getDate()));
+            }else {
+                taskViewHolder.date.setText(null);
             }
-        }
-    }
+            itemView.setVisibility(View.VISIBLE);
+            itemView.setBackgroundColor(resources.getColor(R.color.gray_50));
 
-    @Override
-    public int getItemCount() {
-        return items.size();
+            taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
+            taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
+            taskViewHolder.priority.setColorFilter(resources.getColor(task.getPriorityColor()));
+            taskViewHolder.priority.setImageResource(R.drawable.ic_check_circle_white_24dp);
+
+            taskViewHolder.priority.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    task.setStatus(ModelTask.STATUS_DONE);
+                    itemView.setBackgroundColor(resources.getColor(R.color.gray_200));
+
+                    taskViewHolder.title.setTextColor(resources.getColor(R.color.primary_text_default_material_light));
+                    taskViewHolder.date.setTextColor(resources.getColor(R.color.secondary_text_default_material_light));
+                    taskViewHolder.priority.setColorFilter(resources.getColor(task.getPriorityColor()));
+
+                    ObjectAnimator flipIn = ObjectAnimator.ofFloat(taskViewHolder.priority, "rotationY", -180f, 0f);
+                    flipIn.addListener(new Animator.AnimatorListener() {
+                        @Override
+                        public void onAnimationStart(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationCancel(Animator animator) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animator animator) {
+
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override
@@ -75,16 +112,6 @@ public class CurrentTasksAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return TYPE_TASK;
         } else {
             return TYPE_SEPARATOR;
-        }
-    }
-
-    private class TaskViewHolder extends RecyclerView.ViewHolder {
-        TextView title, date;
-
-        public TaskViewHolder(View itemView, TextView title, TextView date) {
-            super(itemView);
-            this.title = title;
-            this.date = date;
         }
     }
 }

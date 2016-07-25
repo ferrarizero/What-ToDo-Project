@@ -16,7 +16,7 @@
             android:id="@+id/pager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_layout"
@@ -27,27 +27,38 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:layout_scrollFlags="scroll|enterAlways">
+
+                <android.support.v7.widget.SearchView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/search_view"
+                    android:layout_gravity="right"
+                    app:theme="@style/Theme.AppCompat.NoActionBar"
+                    app:searchIcon="@drawable/ic_search_white_24dp">
+                </android.support.v7.widget.SearchView>
+
+            </android.support.v7.widget.Toolbar>
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tab_layout"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
                 app:tabIndicatorColor="@android:color/background_light"
                 app:tabSelectedTextColor="@android:color/background_light"
-                app:tabTextColor="@android:color/background_light"
-                app:layout_scrollFlags="scroll|enterAlways"/>
+                app:tabTextColor="@android:color/background_light" />
 
         </android.support.design.widget.AppBarLayout>
 
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/fab"
-            app:layout_anchor="@id/pager"
-            app:layout_anchorGravity="bottom|right|end"
+            android:layout_margin="@dimen/fab_margin"
             android:src="@drawable/ic_plus"
-            android:layout_margin="@dimen/fab_margin"/>
+            app:layout_anchor="@id/pager"
+            app:layout_anchorGravity="bottom|right|end" />
 
     </android.support.design.widget.CoordinatorLayout>
 </FrameLayout>

@@ -23,6 +23,7 @@ import java.util.Calendar;
 
 import devferrarizero.whattodotasklist.R;
 import devferrarizero.whattodotasklist.Utils;
+import devferrarizero.whattodotasklist.alarm.AlarmHelper;
 import devferrarizero.whattodotasklist.model.ModelTask;
 
 public class AddingTaskDialogFragment extends DialogFragment {
@@ -149,8 +150,12 @@ public class AddingTaskDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 task.setTitle(etTitle.getText().toString());
+                task.setStatus(ModelTask.STATUS_CURRENT);
                 if (etDate.length() != 0 || etTime.length() != 0) {
                     task.setDate(calendar.getTimeInMillis());
+
+                    AlarmHelper alarmHelper = AlarmHelper.getInstance();
+                    alarmHelper.setAlarm(task);
                 }
                 task.setStatus(ModelTask.STATUS_CURRENT);
                 addingTaskListener.onTaskAdded(task);

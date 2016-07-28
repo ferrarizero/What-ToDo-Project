@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import devferrarizero.whattodotasklist.adapter.TabAdapter;
+import devferrarizero.whattodotasklist.alarm.AlarmHelper;
 import devferrarizero.whattodotasklist.database.DBHelper;
 import devferrarizero.whattodotasklist.dialog.AddingTaskDialogFragment;
 import devferrarizero.whattodotasklist.fragment.CurrentTaskFragment;
@@ -46,6 +47,8 @@ public class MainActivity extends AppCompatActivity
         PreferenceHelper.getInstance().init(getApplicationContext());
         preferenceHelper = PreferenceHelper.getInstance();
 
+        AlarmHelper.getInstance().init(getApplicationContext());
+
         dbHelper = new DBHelper(getApplicationContext());
 
         fragmentManager = getFragmentManager();
@@ -53,6 +56,18 @@ public class MainActivity extends AppCompatActivity
         runSplash();
 
         setUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
     }
 
     @Override

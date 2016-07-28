@@ -11,6 +11,7 @@ import android.view.View;
 import devferrarizero.whattodotasklist.MainActivity;
 import devferrarizero.whattodotasklist.R;
 import devferrarizero.whattodotasklist.adapter.TaskAdapter;
+import devferrarizero.whattodotasklist.alarm.AlarmHelper;
 import devferrarizero.whattodotasklist.model.Item;
 import devferrarizero.whattodotasklist.model.ModelTask;
 
@@ -21,7 +22,7 @@ public abstract class TaskFragment extends Fragment {
     protected TaskAdapter adapter;
 
     public MainActivity activity;
-
+    public AlarmHelper alarmHelper;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -30,6 +31,8 @@ public abstract class TaskFragment extends Fragment {
         if (getActivity() != null) {
             activity = (MainActivity) getActivity();
         }
+
+        alarmHelper = AlarmHelper.getInstance();
 
         addTaskFromDB();
     }
@@ -91,6 +94,7 @@ public abstract class TaskFragment extends Fragment {
                         @Override
                         public void onViewDetachedFromWindow(View view) {
                             if (isRemoved[0]){
+                                alarmHelper.removeAlarm(timeStamp);
                                 activity.dbHelper.removeTask(timeStamp);
                             }
                         }
